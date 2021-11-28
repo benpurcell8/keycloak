@@ -122,6 +122,9 @@
             interval: 5
         };
 
+        var ssoLogin = false;
+        var justLoggedOut = false;
+
         var scripts = document.getElementsByTagName('script');
         for (var i = 0; i < scripts.length; i++) {
             if ((scripts[i].src.indexOf('keycloak.js') !== -1 || scripts[i].src.indexOf('keycloak.min.js') !== -1) && scripts[i].src.indexOf('version=') !== -1) {
@@ -1378,6 +1381,9 @@
                         };
 
                         ref.addEventListener('loadstart', function(event) {
+                            if(!ssoLogin && event.url.includes('broker')) {
+                                ssoLogin = true;
+                            }
                             if (event.url.indexOf('http://localhost') == 0) {
                                 var callback = parseCallback(event.url);
                                 processCallback(callback, promise);
@@ -1402,10 +1408,12 @@
 
                         ref.addEventListener('exit', function(event) {
                             if (!closed) {
+                                var reason = justLoggedOut ? "closed_by_logout" : "closed_by_user";
                                 promise.setError({
-                                    reason: "closed_by_user"
+                                    reason: reason
                                 });
                             }
+                            justLoggedOut = false;
                         });
 
                         return promise.promise;
@@ -1416,25 +1424,34 @@
 
                         var logoutUrl = kc.createLogoutUrl(options);
                         var ref = cordovaOpenWindowWrapper(logoutUrl, '_blank', 'location=no,hidden=yes');
-
                         var error;
+                        var completed = false;
 
                         ref.addEventListener('loadstart', function(event) {
                             if (event.url.indexOf('http://localhost') == 0) {
                                 kc.clearToken();
                                 promise.setSuccess();
                                 ref.close();
+                                ssoLogin=false;
+                                completed = true;
+                                justLoggedOut=true;
+                            } else {
+                                if (ssoLogin) {
+                                  ref.show();
+                                }
                             }
                         });
 
                         ref.addEventListener('loaderror', function(event) {
-                            if (event.url.indexOf('http://localhost') == 0) {
-                                ref.close();
-                            } else {
-                                error = true;
-                                promise.setError();
-                                ref.close();
-                            }
+                                if (!completed) {
+                                    if (event.url.indexOf('http://localhost') == 0) {
+                                        ref.close();
+                                    } else {
+                                        error = true;
+                                        promise.setError();
+                                        ref.close();
+                                    }
+                               }
                         });
 
                         ref.addEventListener('exit', function(event) {

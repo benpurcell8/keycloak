@@ -1,6 +1,6 @@
 {
   "name": "@datch/keycloak-js",
-  "version": "10.0.2-commit-5fe6184ac",
+  "version": "10.0.2-commit-aeb9b147f5",
   "description": "Keycloak Adapter modified via datch's github repo to patch logout issue. We manually pushed this to our private repository",
   "main": "dist/keycloak.js",
   "typings": "dist/keycloak.d.ts",

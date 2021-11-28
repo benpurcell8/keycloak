@@ -10,7 +10,11 @@ But this seems to pull its original files from somewhere else. So also built fro
 
 ## Build steps
 
-Go to `distribution/adapters/js-adapter-npm-zip` and run `mvn package` and copy the files across from `distribution/adapters/js-adapter-npm-zip/target/keycloak-js-adapter-npm-dist-10.0.2.zip` to the keycloak-js/dist folder (this is so we can combine them with the package.json file and only deploy keycloak-js adapter).
+## Build steps
+
+Go to `adapters/oidc/js` and run `mvn package` and copy the files from `adapters/oidc/js/target/classes` to `keycloak-js/dist` folder (this is so we can combine them with the package.json file and only deploy keycloak-js adapter).
+
+Make your update to the package.json file in `keycloak-js` folder
 
 Mavern version I was using: `Apache Maven 3.6.1 (d66c9c0b3152b2e69ee9bac180bb8fcc8e6af555; 2019-04-05T08:00:29+13:00)`
 
