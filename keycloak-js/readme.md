@@ -18,6 +18,14 @@ Make your update to the package.json file in `keycloak-js` folder
 
 Mavern version I was using: `Apache Maven 3.6.1 (d66c9c0b3152b2e69ee9bac180bb8fcc8e6af555; 2019-04-05T08:00:29+13:00)`
 
-## Steps to publish
+## Steps to publish to Datch npm registry
+Go into the keycloak-js folder `./keycloak-js`.
 
-Go into the keycloak-js folder. On your command line run `npm publish -registry https://registry.datch.io`
+You'll need the gcp artifact registry auth package.
+`npm install -g google-artifactregistry-auth`
+
+Authenticate with GCP artifact registry. This will use your gcp user login or service account credentials
+`npx google-artifactregistry-auth`
+
+Publish the package. any packages with the `@datch` scope will be published to the datch npm repo based on the config in `keycloak-js/.npmrc`
+`npm publish`
